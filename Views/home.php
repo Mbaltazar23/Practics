@@ -8,8 +8,9 @@ if (isset($_SESSION["login"])) {
     <div class="cover"></div>
 </section>
 <section class="login-content">
-    <div class="logo">
+    <div class="logo text-center">
         <h1><?= $data['page_title']; ?></h1>
+        <h3>Sistema de Gestión de Prácticas</h3>
     </div>
     <div class="login-box">
         <div id="divLoading" >

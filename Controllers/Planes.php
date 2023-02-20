@@ -28,13 +28,13 @@ class Planes extends Controllers {
             $btnTareas = '';
             $btnDelAc = '';
             if ($listPlanes[$i]["status"] == 1) {
-                $listPlanes[$i]["status"] = '<span class="badge badge-success">En espera</span>';
+                $listPlanes[$i]["status"] = '<span class="badge badge-success">Activo</span>';
                 $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfo(' . $listPlanes[$i]['id'] . ')" title="Ver Plan"><i class="far fa-eye"></i></button>';
                 $btnEdit = '<button class="btn btn-primary btn-sm" onClick="fntEditInfo(this,' . $listPlanes[$i]['id'] . ')" title="Editar Plan"><i class="fas fa-pencil-alt"></i></button>';
                 $btnTareas = '<button class="btn btn-dark btn-sm" onClick="fntTareasPlan(this,' . $listPlanes[$i]['id'] . ')" title="Añadir Tareas"><i class="fas fa-book" aria-hidden="true"></i></button>';
                 $btnDelAc = '<button class="btn btn-danger btn-sm" onClick="fntDelInfo(' . $listPlanes[$i]['id'] . ')" title="Eliminar Plan"><i class="far fa-trash-alt"></i></button>';
             } else if ($listPlanes[$i]["status"] == 2) {
-                $listPlanes[$i]["status"] = '<span class="badge badge-dark">Activo</span>';
+                $listPlanes[$i]["status"] = '<span class="badge badge-dark">En uso</span>';
                 $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfo(' . $listPlanes[$i]['id'] . ')" title="Ver Plan"><i class="far fa-eye"></i></button>';
                 $btnEdit = '<button class="btn btn-primary btn-sm" onClick="fntEditInfo(this,' . $listPlanes[$i]['id'] . ')" title="Editar Plan"><i class="fas fa-pencil-alt"></i></button>';
                 $btnTareas = '<button class="btn btn-dark btn-sm" onClick="fntTareasPlan(this,' . $listPlanes[$i]['id'] . ')" title="Ver Tareas"><i class="fas fa-book" aria-hidden="true"></i></button>';

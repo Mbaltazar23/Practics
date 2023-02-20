@@ -13,7 +13,7 @@ const DB_PASSWORD = "1234";
 const DB_CHARSET = "utf8";
 //Datos basicos de la version final
 const TITLE = "";
-const NOMBRE_WEB = "Practisc";
+const NOMBRE_WEB = "PRACTIS";
 const DASHBOARD = "Dashboard";
 const ROLADMIN = "Administrador";
 const ROLADMINCOLE = "Administrador de Colegio";

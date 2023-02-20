@@ -17,9 +17,9 @@ class Tutores extends Controllers {
     }
 
     public function tutores() {
-        $data['page_tag'] = NOMBRE_WEB . "- Tutores";
-        $data['page_title'] = "Tutores";
-        $data['page_name'] = "tutores";
+        $data['page_tag'] = NOMBRE_WEB . "- Profesores";
+        $data['page_title'] = "Profesores";
+        $data['page_name'] = "profesores";
         $data['rol-personal'] = $_SESSION['cargo-personal'];
         $data['page_functions_js'] = "functions_tutors.js";
         $this->views->getView($this, "tutores", $data);
