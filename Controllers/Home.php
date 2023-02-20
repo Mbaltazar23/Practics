@@ -15,26 +15,26 @@ class Home extends Controllers {
         $this->views->getView($this, "home", $data);
     }
 
-     public function login() {
+    public function login() {
         if ($_POST) {
-            if (empty($_POST['correo']) || empty($_POST['clave'])) {
+            if (empty($_POST['txtEmail']) || empty($_POST['txtPassword'])) {
                 $arrResponse = array('status' => false, 'msg' => 'Error de datos');
             } else {
-                $strCorreo = ucwords(strClean($_POST['correo']));
-                $strPassword = md5($_POST["clave"]);
+                $strCorreo = ucwords(strClean($_POST['txtEmail']));
+                $strPassword = md5($_POST["txtPassword"]);
                 $requestUser = $this->model->loginUser($strCorreo, $strPassword);
                 if (empty($requestUser)) {
                     $arrResponse = array('status' => false, 'msg' => 'El usuario o la contraseña es incorrecto.');
                 } else {
                     $_SESSION['login'] = true;
-                    $arrData = $this->model->sessionLogin($requestUser['idpersona']);
+                    $arrData = $this->model->sessionLogin($requestUser['id']);
                     $_SESSION["email-personal"] = $arrData["correo"];
-                    $_SESSION["nombres"] = $arrData["nombres"] . " " . $arrData["apellidos"];
-                    $_SESSION["idPersona"] = $arrData["idpersona"];
+                    $_SESSION["nombres"] = $arrData["nombre"] . " " . $arrData["apellido"];
+                    $_SESSION["idPersona"] = $arrData["id"];
                     $_SESSION["titulo"] = $arrData["titulo"];
                     $_SESSION["encabezado"] = $arrData["encabezado"];
                     $_SESSION["cargo-personal"] = $arrData["rol"];
-                    $arrResponse = array('status' => true, 'msg' => 'ok', 'personal' => $requestUser);
+                    $arrResponse = array('status' => true, 'msg' => 'ok', 'personal' => $arrData);
                 }
             }
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
@@ -42,15 +42,17 @@ class Home extends Controllers {
         die();
     }
 
-    public function getUser($idPersonal) {
-        $IntIdPersonal = intval($idPersonal);
+    public function getUser() {
+        $IntIdPersonal = intval($_SESSION["idPersona"]);
         if ($IntIdPersonal > 0) {
             $arrData = $this->model->getUser($IntIdPersonal);
             if (empty($arrData)) {
                 $arrResponse = array('status' => false, 'msg' => 'Datos no encontrados.');
             } else {
                 if ($arrData['avatar'] != "") {
-                    $arrData['url_portada'] = media() . '/img/perfil/' . $arrData['avatar'];
+                    $arrData['url_portada'] = media() . '/images/perfil/' . $arrData["avatar"];
+                } else {
+                    $arrData['url_portada'] = media() . '/images/perfil/logo_icono.jpg';
                 }
                 $arrResponse = array('status' => true, 'data' => $arrData);
             }
@@ -58,8 +60,8 @@ class Home extends Controllers {
         }
     }
 
-    public function setSesion($idPerson) {
-        $IntIdPersonal = intval($idPerson);
+    public function setSesion() {
+        $IntIdPersonal = intval($_SESSION["idPersona"]);
         if ($IntIdPersonal > 0) {
             $session = $this->model->desconectarSession($IntIdPersonal);
             echo $session;
@@ -68,15 +70,21 @@ class Home extends Controllers {
 
     public function setPasswordUser() {
         if ($_POST) {
-            if (empty($_POST["txtPassword"]) || empty($_POST["txtPassword02"])) {
+            if (empty($_POST["txtRut"]) || empty($_POST["txtNombre"]) || empty($_POST["txtApellido"])) {
                 $arrResponse = array('status' => false, 'msg' => 'Error de datos');
             } else {
                 $idPersonal = intval($_POST["idPerPass"]);
-                $password = md5($_POST["txtPassword"]);
+                $txtRut = $_POST["txtRut"];
+                $txtNombre = strClean(ucwords($_POST["txtNombre"]));
+                $txtApellido = strClean(ucwords($_POST["txtApellido"]));
+                $txtEmail = strClean(ucwords($_POST["txtEmail"]));
+                $txtDireccion = strClean($_POST["txtDireccion"]);
+                $password = empty($_POST["txtPassword"]) ? "" : md5($_POST["txtPassword"]);
 
-                $request_pass = $this->model->setPerfilLogin($idPersonal, $password);
+                $request_pass = $this->model->setPerfilLogin($idPersonal, $txtRut, $txtNombre, $txtApellido, $txtEmail, $txtDireccion, $password);
                 if ($request_pass) {
                     $arrResponse = array("status" => true, "msg" => 'Perfil actualizado Exitosamente !!');
+                    $this->model->sessionLogin($idPersonal);
                 } else {
                     $arrResponse = array("status" => false, "msg" => 'No es posible almacenar los datos.');
                 }
@@ -126,45 +134,6 @@ class Home extends Controllers {
             echo json_encode($arrResponse, JSON_UNESCAPED_UNICODE);
         }
         die();
-    }
-
-    public function searchPersons() {
-        if ($_POST) {
-            $idPerson = intval($_SESSION["idPersona"]);
-            $nameSearch = strClean($_POST["searchTerm"]);
-            $requestChat = $this->model->selectPersonsChat($idPerson, $nameSearch);
-            echo json_encode($requestChat);
-        }
-    }
-
-    public function searchPersonsActives() {
-        if ($_GET) {
-            $idPerson = intval($_SESSION["idPersona"]);
-            $requestPersons = $this->model->selectPersonsActive($idPerson);
-            echo json_encode($requestPersons);
-        }
-    }
-
-    public function setChatPerson() {
-        if ($_POST) {
-            $strMessage = strClean($_POST["message"]);
-            $intIdEnvio = intval($_SESSION["idPersona"]);
-            $intIdRecept = intval($_POST["incoming_id"]);
-
-            $request_chat = $this->model->insertChat($intIdEnvio, $intIdRecept, $strMessage);
-
-            echo $request_chat;
-        }
-    }
-
-    public function getChats() {
-        if ($_POST) {
-            $intIdRecept = intval($_SESSION["idPersona"]);
-            $intIdEnvio = intval($_POST["incoming_id"]);
-
-            $requestMessages = $this->model->selectMessages($intIdEnvio, $intIdRecept);
-            echo json_encode($requestMessages);
-        }
     }
 
 }

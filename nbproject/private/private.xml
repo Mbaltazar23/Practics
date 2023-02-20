@@ -3,14 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/Practics/Views/Template/Dashboard/footer_admin.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Assets/js/actions/functions_perfil.js</file>
-            <file>file:/C:/xampp/htdocs/Practics/Assets/js/actions/functions_profile.js</file>
-            <file>file:/C:/xampp/htdocs/Practics/Views/home.php</file>
             <file>file:/C:/xampp/htdocs/Practics/Views/Dashboard/profile.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Views/Template/Dashboard/nav_admin.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Assets/js/actions/functions_login.js</file>
+            <file>file:/C:/xampp/htdocs/Practics/Controllers/Alumnos.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Models/DashboardModel.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Controllers/Home.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Controllers/Error.php</file>
             <file>file:/C:/xampp/htdocs/Practics/Controllers/Dashboard.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Models/HomeModel.php</file>
         </group>
     </open-files>
 </project-private>

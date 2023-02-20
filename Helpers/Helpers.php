@@ -10,12 +10,12 @@ function media() {
     return BASE_URL . "/Assets";
 }
 
-function headerAdmin($data = "") {
+function headerDashboard($data = "") {
     $view_header = "Views/Template/Dashboard/header_admin.php";
     require_once ($view_header);
 }
 
-function footerAdmin($data = "") {
+function footerDashboard($data = "") {
     $view_footer = "Views/Template/Dashboard/footer_admin.php";
     require_once ($view_footer);
 }
@@ -89,16 +89,18 @@ function suscripcionCli(int $idpersona) {
     return $request;
 }
 
-function uploadImage(array $data, string $name) {
+//metodo que servira para la subida de imagenes
+function uploadImage(array $data, string $name, string $ruta) {
     $url_temp = $data['tmp_name'];
-    $destino = 'Assets/images/uploads/' . $name;
+    $destino = 'Assets/images/' . $ruta . '/' . $name;
     $move = move_uploaded_file($url_temp, $destino);
     return $move;
 }
 
-function deleteFile(string $name) {
-    unlink('Assets/images/uploads/' . $name);
+function deleteFile(string $name, string $ruta) {
+    unlink($destino = 'Assets/images/' . $ruta . '/' . $name);
 }
+
 
 //Elimina exceso de espacios entre palabras
 function strClean($strCadena) {
@@ -220,30 +222,56 @@ function navDashboard() {
     $navAdmin = "";
     if ($_SESSION['cargo-personal'] == ROLADMIN) {
         $navAdmin = array(
-            "Docentes" => array(
-                "icon" => "dw dw-school",
+            "Establecimientos" => array(
+                "icon" => "fa fa-graduation-cap",
                 "submodulos" => array(
-                    "Profesores" => array("pagina" => "profesores"),
+                    "Colegios" => array("pagina" => "colegios"),
+                    "Supervisores" => array("pagina" => "supervisores")
+                )
+        ));
+    } else if ($_SESSION['cargo-personal'] == ROLADMINCOLE) {
+        $navAdmin = array(
+            "Docencia" => array(
+                "icon" => "fas fa-chalkboard-teacher",
+                "submodulos" => array(
+                    "Profesores" => array("pagina" => "tutores"),
                     "Guias" => array("pagina" => "guias"),
+                    "Alumnos" => array("pagina" => "alumnos"),
                     "Empresas" => array("pagina" => "empresas")
                 )
             ),
             "Educacion" => array(
-                "icon" => "dw dw-user-2",
+                "icon" => "fas fa-user-graduate",
                 "submodulos" => array(
-                    "Alumnos" => array("pagina" => "alumnos"),
                     "Cursos" => array("pagina" => "cursos"),
                     "Especialidades" => array("pagina" => "especialidades")
                 )
             ),
             "Estudios" => array(
-                "icon" => "dw dw-folder",
+                "icon" => "fas fa-folder",
                 "submodulos" => array(
                     "Planes" => array("pagina" => "planes"),
                     "Tareas" => array("pagina" => "tareas")
                 )
             )
         );
+    } else if ($_SESSION['cargo-personal'] == ROLPROFE || $_SESSION['cargo-personal'] == ROLGUIA) {
+        $page = $_SESSION['cargo-personal'] != ROLPROFE ? "alumnosguia" : "alumnosprofe";
+        $navAdmin = array(
+            "Estudios" => array(
+                "icon" => "fas fa-user-graduate",
+                "submodulos" => array(
+                    "Alumnos" => array("pagina" => "alumnos/$page"),
+                )
+        ));
+    } else {
+        $navAdmin = array(
+            "Plan de Practica" => array(
+                "icon" => "far fa-address-book",
+                "submodulos" => array(
+                    "Tareas" => array("pagina" => "tareas/tareasalu"),
+                )
+        ));
     }
     return $navAdmin;
 }

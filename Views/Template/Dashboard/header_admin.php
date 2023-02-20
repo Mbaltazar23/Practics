@@ -1,38 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
     <head>
-        <!-- Basic Page Info -->
         <meta charset="utf-8">
+        <meta name="description" content="<?= NOMBRE_WEB ?>">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="<?= media(); ?>/images/perfil/logo_icono.jpg">
         <?php
         $navDashboard = navDashboard();
         ?>
-        <title><?= $data["page_tag"] ?></title>
-        <!-- Site favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="<?= media(); ?>/images/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="<?= media(); ?>/images/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="<?= media(); ?>/images/favicon-16x16.png">
-        <!-- Mobile Specific Metas -->
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-        <!-- Google Font -->
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-        <!-- CSS -->
-        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/core.css">
-        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/icon-font.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/js/plugins/datatables/css/dataTables.bootstrap4.min.css">
-        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/js/plugins/datatables/css/responsive.bootstrap4.min.css">
+        <meta name="author" content="Mbaltazar">
+        <meta name="theme-color" content="#009688">
+        <title><?= $data['page_tag'] ?></title>
+        <!-- Main CSS-->
+        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/main.css">
+        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/bootstrap-select.min.css"> 
+        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/js/datepicker/jquery-ui.min.css"> 
         <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/style.css">
-        <link rel="stylesheet" type="text/css" href="<?= media(); ?>/css/main.css"/>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-119386393-1"></script>
-        <script>
-            window.dataLayer = window.dataLayer || [];
-            function gtag() {
-                dataLayer.push(arguments);
-            }
-            gtag('js', new Date());
-
-            gtag('config', 'UA-119386393-1');
-        </script>
     </head>
-    <body>
-        <?php require_once("nav_admin.php"); ?> 
+    <body class="app sidebar-mini">
+        <div id="divLoading" >
+            <div>
+                <img src="<?= media(); ?>/images/loading.svg" alt="Loading">
+            </div>
+        </div>
+        <!-- Navbar-->
+        <header class="app-header"><a class="app-header__logo" href="<?= base_url(); ?>/dashboard"><?= NOMBRE_WEB ?></a>
+            <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"><i class="fas fa-bars"></i></a>
+            <!-- Navbar Right Menu-->
+            <ul class="app-nav">
+                <!-- User Menu-->
+                <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown" aria-label="Open Profile Menu"><i class="fa fa-user fa-lg"></i></a>
+                    <ul class="dropdown-menu settings-menu dropdown-menu-right">
+                        <li><a class="dropdown-item" href="<?= base_url(); ?>/dashboard/profile"><i class="fa fa-user fa-lg"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" id="SesionModal"><i class="fa fa-sign-out fa-lg"></i>Salir</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </header>
+        <?php require_once("nav_admin.php"); ?>

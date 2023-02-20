@@ -7,16 +7,17 @@ date_default_timezone_set('America/Santiago');
 
 //Datos de conexión a Base de Datos
 const DB_HOST = "localhost";
-const DB_NAME = "sistemalumn";
+const DB_NAME = "practi";
 const DB_USER = "root";
 const DB_PASSWORD = "1234";
 const DB_CHARSET = "utf8";
-
 //Datos basicos de la version final
 const TITLE = "";
 const NOMBRE_WEB = "Practisc";
+const DASHBOARD = "Dashboard";
 const ROLADMIN = "Administrador";
-const ROLGUIA = "Guia";
+const ROLADMINCOLE = "Administrador de Colegio";
+const ROLGUIA = "Guía";
 const ROLPROFE = "Profesor";
 const ROLALU = "Alumno";
 const IDROLALUM = 2;

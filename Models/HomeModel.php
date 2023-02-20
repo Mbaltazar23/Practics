@@ -5,8 +5,12 @@ class HomeModel extends Mysql {
     private $intIdUsuario;
     private $intIdUsuario02;
     private $strUsuario;
+    private $strRut;
+    private $strNombre;
+    private $strApellido;
     private $strPassword;
     private $strSearch;
+    private $strDireccion;
     private $strMessage;
     private $strFoto;
 
@@ -17,8 +21,8 @@ class HomeModel extends Mysql {
     public function loginUser(string $usuario, string $password) {
         $this->strUsuario = $usuario;
         $this->strPassword = $password;
-        $sql = "SELECT per.idpersona,  per.nombres, per.rut FROM persona per  
-               WHERE per.correo = '$this->strUsuario' and per.password = '$this->strPassword'";
+        $sql = "SELECT per.id,  per.nombre, per.rut FROM persona per  
+               WHERE per.correo = '$this->strUsuario' AND per.password = '$this->strPassword'";
         $request = $this->select($sql);
         return $request;
     }
@@ -26,41 +30,62 @@ class HomeModel extends Mysql {
     public function sessionLogin(int $iduser) {
         $this->intIdUsuario = $iduser;
         //BUSCAR PERSONAL 
-        $sql = "SELECT per.idpersona,per.nombres, per.rut, per.correo,per.apellidos, per.status, per.password, per.avatar, per.fecha,
-               r.nombre as rol FROM persona per INNER JOIN rol r ON r.idrol = per.rolid WHERE per.idpersona = $this->intIdUsuario";
+        $sql = "SELECT per.id, per.nombre, per.rut, per.correo, per.apellido, per.status, per.password, per.avatar,
+               per.rol FROM persona per WHERE per.id = $this->intIdUsuario";
         $request = $this->select($sql);
 
         //cambiar sesion al loguearse 
 
-        $sqlU = "UPDATE persona SET sesion = ? WHERE idpersona = " . $request["idpersona"];
+        $sqlU = "UPDATE persona SET session = ? WHERE id = " . $request["id"];
         $arrData = array("Activo");
         $this->update($sqlU, $arrData);
 
+
         //cargamos el rol del usuario
         $sqlRol = "";
-        if ($request["rol"] == ROLADMIN) {
-            $request["encabezado"] = "Este sera el apartado del admin que podra mirar varias funciones";
-            $request["titulo"] = $request["rol"];
-        } else if ($request["rol"] == ROLPROFE) {
-            $request["encabezado"] = "Este sera el apartado del profesor que podra mirar estas funciones";
-            $request["titulo"] = $request["rol"];
-            $sqlRol = "SELECT tu.idtutor, tu.fono, r.nombre as Rol FROM tutor tu INNER JOIN persona per ON per.idpersona = tu.personaid "
-                    . "INNER JOIN rol r ON per.rolid = r.idrol WHERE per.idpersona = " . $request["idpersona"];
-        } else if ($request["rol"] == ROLGUIA) {
-            $request["encabezado"] = "Este sera el apartado del profesor guia que podra mirar estas funciones";
-            $request["titulo"] = $request["rol"];
-            $sqlRol = "SELECT  g.idguia,g.cargo, g.fono,em.rut, em.nombre,r.nombre as Rol FROM guia g INNER JOIN persona per ON per.idpersona = g.personaid "
-                    . "INNER JOIN rol r ON per.rolid = r.idrol INNER JOIN empresa em ON em.idempresa = g.empresaid WHERE per.idpersona = " . $request["idpersona"];
-        } else {
-            $request["encabezado"] = "Este sera el apartado del alumno que podra mirar estas funciones";
-            $request["titulo"] = $request["rol"];
-            $sqlRol = "SELECT al.idalumno, al.especialidad, al.curso, al.fono, al.fono02 FROM alumno al "
-                    . "INNER JOIN persona per ON per.idpersona = al.personaid WHERE per.idpersona = " . $request["idpersona"];
+        switch ($request["rol"]) {
+            case ROLADMIN:
+                $request["encabezado"] = "Este sera el apartado del admin que podra mirar varias funciones";
+                $request["titulo"] = $request["rol"];
+                break;
+            case ROLADMINCOLE:
+                $request["encabezado"] = "Este sera el apartado del admin que estara afiliado al colegio al que trabajara";
+                $request["titulo"] = $request["rol"];
+                $sqlRol = "SELECT sp.colegio_id, c.nombre as nombreCole, DATE_FORMAT(per.created_at, '%d/%m/%Y') as fecha,
+                    DATE_FORMAT(per.created_at, '%H:%i:%s') AS hora FROM persona_colegio sp INNER JOIN persona per ON sp.persona_id = per.id 
+                    INNER JOIN colegio c ON sp.colegio_id = c.id WHERE sp.persona_id = " . $request["id"];
+                break;
+            case ROLPROFE:
+                $request["encabezado"] = "Este sera el apartado del profesor que podra mirar estas funciones";
+                $request["titulo"] = $request["rol"];
+                $sqlRol = "SELECT pro.id, pro.fono, per.rol, sp.colegio_id, c.nombre as nombreCole FROM profesor pro INNER JOIN persona per 
+                        ON pro.persona_id = per.id INNER JOIN persona_colegio sp ON per.id = sp.persona_id 
+                        INNER JOIN colegio c ON sp.colegio_id = c.id WHERE per.id = " . $request["id"];
+                break;
+            case ROLGUIA:
+                $request["encabezado"] = "Este sera el apartado del profesor guia que podra mirar estas funciones";
+                $request["titulo"] = $request["rol"];
+                $sqlRol = "SELECT g.id ,g.cargo, g.fono,em.rut, em.nombre, per.rol, sp.colegio_id, c.nombre as nombreCole FROM guia g 
+                    INNER JOIN persona per ON g.persona_id = per.id INNER JOIN persona_colegio sp ON per.id = sp.persona_id 
+                    INNER JOIN colegio c ON sp.colegio_id = c.id INNER JOIN empresa em ON em.id = g.empresa_id 
+                    WHERE per.id = " . $request["id"];
+                break;
+            default:
+                $request["encabezado"] = "Este sera el apartado del alumno que podra mirar estas funciones";
+                $request["titulo"] = $request["rol"];
+                $sqlRol = "SELECT al.id, es.nombre as especialidad, cs.nombre as curso, al.fono, al.fono02, per.rol, sp.colegio_id, c.nombre as nombreCole,
+                        p.nombre as nombrePlan FROM alumno al INNER JOIN persona per ON per.id = al.persona_id 
+                        INNER JOIN especialidad es ON al.especialidad_id = es.id INNER JOIN curso cs ON al.curso_id = cs.id 
+                        INNER JOIN persona_colegio sp ON per.id = sp.persona_id INNER JOIN colegio c ON sp.colegio_id = c.id 
+                        INNER JOIN alumno_plan ap ON al.id = ap.alumno_id INNER JOIN plan p ON ap.plan_id = p.id WHERE per.id = " . $request["id"];
+                break;
         }
+
+
         $requestRol = $sqlRol != "" ? $this->select($sqlRol) : "";
         $request["statusLog"] = true;
         $request["detalleRol"] = $requestRol;
-        $request["imgAvatar"] = $request["avatar"] != "" ? media() . "/images/perfil/" . $request["avatar"] : media() . "/images/perfil/perfil-portada.jpg";
+        $request["imgPerfil"] = $request["avatar"] != "" ? $request["avatar"] : "logo_icono.jpg";
         $_SESSION['userData'] = $request;
 
         return $request;
@@ -69,29 +94,48 @@ class HomeModel extends Mysql {
     public function getUser(int $iduser) {
         $this->intIdUsuario = $iduser;
         //BUSCAR PERSONAL 
-        $sql = "SELECT per.idpersona,per.nombres, per.rut, per.correo,per.apellidos, per.status, per.password, per.avatar,per.sesion,
-               r.nombre as rol FROM persona per INNER JOIN rol r ON r.idrol = per.rolid WHERE per.idpersona = $this->intIdUsuario";
+        $sql = "SELECT per.id, per.rut, per.nombre,per.apellido, per.correo,per.apellido,per.status, per.password, per.avatar,per.session,
+               per.rol, per.direccion FROM persona per WHERE per.id = $this->intIdUsuario";
         $request = $this->select($sql);
+
         return $request;
     }
 
-    public function setPerfilLogin(int $idpersonal, string $password) {
-        $this->intIdUsuario = $idpersonal;
+    public function setPerfilLogin(int $idUsuario, string $rut, string $nombre, string $apellido, string $email, string $direccion, string $password) {
+        $this->intIdUsuario = $idUsuario;
+        $this->strNombre = $nombre;
+        $this->strRut = $rut;
+        $this->strDireccion = $direccion;
+        $this->strApellido = $apellido;
+        $this->strUsuario = $email;
         $this->strPassword = $password;
-        $sql = "UPDATE persona SET password = ?  WHERE idpersona = $this->intIdUsuario";
-        $arrData = array($this->strPassword);
-        $request = $this->update($sql, $arrData);
-        if ($request) {
-            return true;
+
+        if ($this->strPassword != "") {
+            $sql = "UPDATE persona SET rut =? ,nombre=?, apellido=?, correo = ?, password= ?, direccion =?
+						WHERE id = $this->intIdUsuario ";
+            $arrData = array($this->strRut,
+                $this->strNombre,
+                $this->strApellido,
+                $this->strUsuario,
+                $this->strPassword,
+                $this->strDireccion);
         } else {
-            return false;
+            $sql = "UPDATE persona SET rut =? ,nombre=?, apellido=? , correo = ?, direccion = ?
+						WHERE id = $this->intIdUsuario ";
+            $arrData = array($this->strRut,
+                $this->strNombre,
+                $this->strApellido,
+                $this->strUsuario,
+                $this->strDireccion);
         }
+        $request = $this->update($sql, $arrData);
+        return $request;
     }
 
     public function insertPortada(int $idpersonal, string $foto) {
         $this->intIdUsuario = $idpersonal;
         $this->strFoto = $foto;
-        $sql = "UPDATE persona SET avatar = ? WHERE idpersona = $this->intIdUsuario";
+        $sql = "UPDATE persona SET avatar = ? WHERE id = $this->intIdUsuario";
         $arrData = array($this->strFoto);
         $request = $this->update($sql, $arrData);
         if ($request) {
