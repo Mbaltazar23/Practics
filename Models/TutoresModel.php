@@ -45,7 +45,7 @@ class TutoresModel extends Mysql {
         $this->intIdColegio = $idcolegio;
         $return = 0;
         $sql = "SELECT * FROM persona per INNER JOIN persona_colegio pc ON per.id = pc.persona_id "
-                . "WHERE per.rut = '{$this->rutTutor}' AND nombre = '{$this->strNombre}' ";
+                . "WHERE per.rut = '{$this->rutTutor}' AND per.nombre = '{$this->strNombre}' ";
         $request = $this->select_all($sql);
         if (empty($request)) {
             $query_insert = "INSERT INTO persona(rut, nombre, apellido, correo, password, rol) VALUES (?,?,?,?,?,?)";

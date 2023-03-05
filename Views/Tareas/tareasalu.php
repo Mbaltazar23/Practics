@@ -9,9 +9,13 @@ getModal('modalTareas', $data);
                 <i class="fas fa-building"></i> <?= NOMBRE_WEB . ' - ' . $data['page_title'] ?> &nbsp;&nbsp;
                 <div class="btn-group" role="group">
                     <div class="btn-group" role="group">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Acciones</button>
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Documentacion</button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" onclick="">Subir documentacion</a>
+                            <a class="dropdown-item" onclick="getDocumentacion()"><span id="txtBtnDoc"></span></a>
+                            <div id="btnDelDoc">
+                                <a class="dropdown-item" onclick="mostrarFormImages()"><i class="fas fa-image"></i>&nbsp;&nbsp;Imagenes</a>
+                                <a class="dropdown-item" id="btnDelN"><span id="txtDel"></span></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -19,7 +23,7 @@ getModal('modalTareas', $data);
         </div>
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="<?= base_url(); ?>/tareas/tareasalu"><?= $data['page_title'] ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= base_url(); ?>/tareas/tareasalu"><?= $data['page_name']; ?></a></li>
         </ul>
     </div>
     <div class="row">

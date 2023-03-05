@@ -143,7 +143,7 @@ class PlanesModel extends Mysql {
         $this->idPlan = $idPlan;
         $this->idTarea = $idTarea;
         $this->status = $status;
-        $sql = "SELECT * FROM subida WHERE tarea_id = $this->idTarea";
+        $sql = "SELECT * FROM bitacora WHERE tarea_id = $this->idTarea";
         $request = $this->select_all($sql);
         if (empty($request)) {
             $sqlDel = "UPDATE tarea_plan SET status = ? WHERE plan_id = $this->idPlan AND tarea_id = $this->idTarea";

@@ -30,8 +30,8 @@ class Alumnos extends Controllers {
             header('Location: ' . base_url() . '/alumnos');
             die();
         }
-        $data['page_tag'] = NOMBRE_WEB . "- Alumnos del Guia " . $_SESSION['userData']["nombre"];
-        $data['page_title'] = NOMBRE_WEB . "- Alumnos del Guia " . $_SESSION['userData']["nombre"];
+        $data['page_tag'] = NOMBRE_WEB . " - Alumnos del Guia " . $_SESSION['userData']["nombre"];
+        $data['page_title'] = "Alumnos del Guia " . $_SESSION['userData']["nombre"];
         $data['page_name'] = "alumnos-guia";
         $data['rol-table'] = "rolGuia";
         $data['rol-personal'] = $_SESSION['cargo-personal'];
@@ -45,7 +45,7 @@ class Alumnos extends Controllers {
             die();
         }
         $data['page_tag'] = NOMBRE_WEB . "- Alumnos del Profe " . $_SESSION['userData']["nombre"];
-        $data['page_title'] = NOMBRE_WEB . "- Alumnos del Profe " . $_SESSION['userData']["nombre"];
+        $data['page_title'] = "Alumnos del Profe " . $_SESSION['userData']["nombre"];
         $data['page_name'] = "alumnos-profe";
         $data['rol-table'] = "rolProfe";
         $data['rol-personal'] = $_SESSION['cargo-personal'];
@@ -100,9 +100,12 @@ class Alumnos extends Controllers {
         for ($i = 0; $i < count($listAlumns); $i++) {
             $btnView = '';
             $btnPlan = '';
+            $btnAlumCalf = '';
             if ($listAlumns[$i]["status"] == 1) {
                 $listAlumns[$i]["status"] = '<span class="badge badge-success">Activo</span>';
                 $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfo(' . $listAlumns[$i]['id'] . ')" title="Ver Alumno"><i class="far fa-eye"></i></button>';
+                $btnPlan = '<button class="btn btn-secondary btn-sm" onClick="fntViewDoc(' . $listAlumns[$i]['id'] . ')" title="Ver Documentacion" disabled><i class="fas fa-book"></i></button>';
+                $btnAlumCalf = '<button class="btn btn-secondary btn-sm" onClick="fntViewNoteP(' . $listAlumns[$i]['id'] . ')" title="Ver Nota del Plan" disabled><i class="fas fa-star"></i></button>';
 
                 if ($_SESSION["cargo-personal"] == ROLGUIA) {
                     $btnPlan = '<button class="btn btn-dark btn-sm" onClick="fntPlanAlumV(' . $listAlumns[$i]['id'] . ')" title="Ver Plan"><i class="far fa-address-book"></i></button>';
@@ -111,10 +114,13 @@ class Alumnos extends Controllers {
                 $listAlumns[$i]["status"] = '<span class="badge badge-dark">Con Plan</span>';
 
                 if ($_SESSION["cargo-personal"] == ROLPROFE) {
-                    $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfoP(' . $listAlumns[$i]['id'] . ')" title="Ver Alumno"><i class="far fa-eye"></i></button>';
-                } else if ($_SESSION["cargo-personal"] == ROLGUIA) {
                     $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfo(' . $listAlumns[$i]['id'] . ')" title="Ver Alumno"><i class="far fa-eye"></i></button>';
+                    $btnPlan = '<button class="btn btn-primary btn-sm" onClick="fntViewDoc(' . $listAlumns[$i]['id'] . ')" title="Ver Documentacion"><i class="fas fa-book"></i></button>';
+                    $btnAlumCalf = '<button class="btn btn-dark btn-sm" onClick="fntViewNoteP(' . $listAlumns[$i]['id'] . ')" title="Ver Nota del Plan"><i class="fas fa-star"></i></button>';
+                } else if ($_SESSION["cargo-personal"] == ROLGUIA) {
+                    $btnView = '<button class="btn btn-info btn-sm" onClick="fntViewInfoP(' . $listAlumns[$i]['id'] . ')" title="Ver Alumno"><i class="far fa-eye"></i></button>';
                     $btnPlan = '<button class="btn btn-dark btn-sm" onClick="fntPlanAlumV(' . $listAlumns[$i]['id'] . ')" title="Ver Plan"><i class="far fa-address-book"></i></button>';
+                    $btnAlumCalf = '<button class="btn btn-primary btn-sm" onClick="fntPlanTareasV(' . $listAlumns[$i]['id'] . ')" title="Ver Tareas subidas"><i class="fas fa-graduation-cap"></i></button>';
                 }
             } else {
                 $listAlumns[$i]['status'] = '<span class="badge badge-danger">Inactivo</span>';
@@ -122,7 +128,7 @@ class Alumnos extends Controllers {
             }
 
             $listAlumns[$i]["nombres%"] = $listAlumns[$i]["nombre"] . ' ' . $listAlumns[$i]["apellido"];
-            $listAlumns[$i]['options'] = '<div>' . $btnView . ' ' . $btnPlan . '</div>';
+            $listAlumns[$i]['options'] = '<div>' . $btnView . ' ' . $btnPlan . ' ' . $btnAlumCalf . '</div>';
         }
 
         echo json_encode($listAlumns, JSON_UNESCAPED_UNICODE);

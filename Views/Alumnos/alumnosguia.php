@@ -11,7 +11,7 @@ getModal('modalAlumnos', $data);
                     <div class="btn-group" role="group">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Acciones</button>
                         <div class="dropdown-menu dropdown-menu-right">
-                            <a class="dropdown-item" onclick="generarReportRolAlumns()">Generar Reporte</a>
+                            <a class="dropdown-item" onclick="generarReportRolAlumns()"><i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar Reporte</a>
                         </div>
                     </div>
                 </div>

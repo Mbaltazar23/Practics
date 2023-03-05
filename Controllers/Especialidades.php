@@ -1,10 +1,11 @@
 <?php
+
 /**
  * Description of Especialidades
  *
  * @author mario
  */
-class Especialidades extends Controllers{
+class Especialidades extends Controllers {
 
     public function __construct() {
         parent::__construct();
@@ -16,6 +17,10 @@ class Especialidades extends Controllers{
     }
 
     public function especialidades() {
+        if ($_SESSION['cargo-personal'] !== ROLADMINCOLE) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . "- Especialidades del Colegio " . $_SESSION["userData"]["detalleRol"]["nombreCole"];
         $data['page_title'] = "Especialidades";
         $data['page_name'] = "especialidades";
@@ -133,5 +138,5 @@ class Especialidades extends Controllers{
         $listEspecialidades = $this->model->selectEspecialidades();
         echo json_encode($listEspecialidades, JSON_UNESCAPED_UNICODE);
     }
-    
+
 }

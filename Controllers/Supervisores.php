@@ -12,6 +12,10 @@ class Supervisores extends Controllers {
     }
 
     public function supervisores() {
+        if ($_SESSION['cargo-personal'] !== ROLADMIN) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . "- Supervisores Colegios";
         $data['page_title'] = "Supervisores";
         $data['page_name'] = "supervisores";

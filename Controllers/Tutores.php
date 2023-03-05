@@ -17,6 +17,10 @@ class Tutores extends Controllers {
     }
 
     public function tutores() {
+        if ($_SESSION['cargo-personal'] !== ROLADMINCOLE) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . "- Profesores";
         $data['page_title'] = "Profesores";
         $data['page_name'] = "profesores";

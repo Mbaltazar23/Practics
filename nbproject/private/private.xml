@@ -3,15 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/Practics/Views/Dashboard/profile.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Views/home.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Config/Config.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Controllers/Alumnos.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Controllers/Home.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Assets/css/main.css</file>
-            <file>file:/C:/xampp/htdocs/Practics/Controllers/Dashboard.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Models/HomeModel.php</file>
-            <file>file:/C:/xampp/htdocs/Practics/Controllers/Tutores.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Models/CursosModel.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Assets/js/functions_tareasAlu.js</file>
+            <file>file:/C:/xampp/htdocs/Practics/Views/Supervisiones/supervisionesAd.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Views/Supervisiones/supervisiones.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Assets/css/style.css</file>
+            <file>file:/C:/xampp/htdocs/Practics/Views/Template/Modals/modalSupervisiones.php</file>
+            <file>file:/C:/xampp/htdocs/Practics/Helpers/Helpers.php</file>
         </group>
     </open-files>
 </project-private>

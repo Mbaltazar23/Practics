@@ -20,8 +20,7 @@ class EspecialidadesModel extends Mysql {
         $this->intIdColegio = $_SESSION["userData"]["detalleRol"]["colegio_id"];
         $this->intStatus = $option != NULL ? "AND es.status != 0" : "";
         $sql = "SELECT es.id, es.nombre, DATE_FORMAT(es.created_at, '%d/%m/%Y') as fecha, DATE_FORMAT(es.updated_at, '%H:%i:%s') as hora,
-               es.status FROM especialidad es INNER JOIN colegio_especialidad ce ON es.id = ce.especialidad_id 
-               WHERE ce.colegio_id = $this->intIdColegio $this->intStatus";
+               es.status FROM especialidad es WHERE es.colegio_id = $this->intIdColegio $this->intStatus";
         $request = $this->select_all($sql);
         return $request;
     }
@@ -39,18 +38,13 @@ class EspecialidadesModel extends Mysql {
         $this->intIdColegio = $idcolegio;
         $return = 0;
         $sql = "SELECT * FROM especialidad es 
-               INNER JOIN colegio_especialidad ce ON es.id = ce.especialidad_id 
-               WHERE es.nombre = '{$this->strNombre}' AND ce.colegio_id = $this->intIdColegio";
+               WHERE es.nombre = '{$this->strNombre}' AND es.colegio_id = $this->intIdColegio";
         $request = $this->select_all($sql);
         if (empty($request)) {
-            $query_insert = "INSERT INTO especialidad(nombre) VALUES (?)";
-            $arrData = array($this->strNombre);
+            $query_insert = "INSERT INTO especialidad(nombre,colegio_id) VALUES (?)";
+            $arrData = array($this->strNombre,
+                $this->intIdColegio);
             $request_insert = $this->insert($query_insert, $arrData);
-            if ($request_insert) {
-                $sqlCole = "INSERT INTO colegio_especialidad (especialidad_id, colegio_id) VALUES (?,?)";
-                $arrD = array($request_insert, $this->intIdColegio);
-                $this->insert($sqlCole, $arrD);
-            }
             $return = $request_insert;
         } else {
             $return = "exist";

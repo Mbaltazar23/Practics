@@ -101,7 +101,6 @@ function deleteFile(string $name, string $ruta) {
     unlink($destino = 'Assets/images/' . $ruta . '/' . $name);
 }
 
-
 //Elimina exceso de espacios entre palabras
 function strClean($strCadena) {
     $string = preg_replace(['/\s+/', '/^\s|\s$/'], [' ', ''], $strCadena);
@@ -236,8 +235,9 @@ function navDashboard() {
                 "submodulos" => array(
                     "Profesores" => array("pagina" => "tutores"),
                     "Guias" => array("pagina" => "guias"),
-                    "Alumnos" => array("pagina" => "alumnos"),
-                    "Empresas" => array("pagina" => "empresas")
+                    "Alumnos" => array("pagina" => "alumnos"), 
+                    "Empresas" => array("pagina" => "empresas"),
+                    "Supervisiónes" => array("pagina" => "supervisiones/supervisionesAd")
                 )
             ),
             "Educacion" => array(
@@ -257,13 +257,26 @@ function navDashboard() {
         );
     } else if ($_SESSION['cargo-personal'] == ROLPROFE || $_SESSION['cargo-personal'] == ROLGUIA) {
         $page = $_SESSION['cargo-personal'] != ROLPROFE ? "alumnosguia" : "alumnosprofe";
-        $navAdmin = array(
+        $navAdmin = $_SESSION['cargo-personal'] != ROLPROFE ? array(
             "Estudios" => array(
                 "icon" => "fas fa-user-graduate",
                 "submodulos" => array(
                     "Alumnos" => array("pagina" => "alumnos/$page"),
                 )
-        ));
+            )) : array(
+            "Estudios" => array(
+                "icon" => "fas fa-user-graduate",
+                "submodulos" => array(
+                    "Alumnos" => array("pagina" => "alumnos/$page"),
+                )
+            ),
+            "Supervisiónes" => array(
+                "icon" => "fas fa-user-tie",
+                "submodulos" => array(
+                    "Anotaciones" => array("pagina" => "supervisiones")
+                )
+            )
+        );
     } else {
         $navAdmin = array(
             "Plan de Practica" => array(

@@ -16,6 +16,10 @@ class Guias extends Controllers {
     }
 
     public function guias() {
+        if ($_SESSION['cargo-personal'] !== ROLADMINCOLE) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . "- Guias";
         $data['page_title'] = "Guias";
         $data['page_name'] = "guias";
@@ -83,7 +87,7 @@ class Guias extends Controllers {
 
                 if ($idGuia == 0) {
                     $option = 1;
-                    $request_guia = $this->model->insertGuia($txtRut, $txtNombre, $txtApellido, $txtCorreo, $txtPass, ROLGUIA, $txtTelefono, $Ocupacion, $listEmpresas,$IdColegio);
+                    $request_guia = $this->model->insertGuia($txtRut, $txtNombre, $txtApellido, $txtCorreo, $txtPass, ROLGUIA, $txtTelefono, $Ocupacion, $listEmpresas, $IdColegio);
                 } else {
                     $option = 2;
                     $request_guia = $this->model->updateGuia($txtRut, $txtNombre, $txtApellido, $txtCorreo, $txtTelefono, $Ocupacion, $listEmpresas, $idGuia);

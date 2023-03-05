@@ -21,7 +21,7 @@ class HomeModel extends Mysql {
     public function loginUser(string $usuario, string $password) {
         $this->strUsuario = $usuario;
         $this->strPassword = $password;
-        $sql = "SELECT per.id,  per.nombre, per.rut FROM persona per  
+        $sql = "SELECT per.id, per.nombre, per.rut FROM persona per  
                WHERE per.correo = '$this->strUsuario' AND per.password = '$this->strPassword'";
         $request = $this->select($sql);
         return $request;
@@ -74,7 +74,7 @@ class HomeModel extends Mysql {
                 $request["encabezado"] = "Este sera el apartado del alumno que podra mirar estas funciones";
                 $request["titulo"] = $request["rol"];
                 $sqlRol = "SELECT al.id, es.nombre as especialidad, cs.nombre as curso, al.fono, al.fono02, per.rol, sp.colegio_id, c.nombre as nombreCole,
-                        p.nombre as nombrePlan FROM alumno al INNER JOIN persona per ON per.id = al.persona_id 
+                        p.nombre as nombrePlan,ap.plan_id as idPlanA, ap.id as idAlumPlan FROM alumno al INNER JOIN persona per ON per.id = al.persona_id 
                         INNER JOIN especialidad es ON al.especialidad_id = es.id INNER JOIN curso cs ON al.curso_id = cs.id 
                         INNER JOIN persona_colegio sp ON per.id = sp.persona_id INNER JOIN colegio c ON sp.colegio_id = c.id 
                         INNER JOIN alumno_plan ap ON al.id = ap.alumno_id INNER JOIN plan p ON ap.plan_id = p.id WHERE per.id = " . $request["id"];

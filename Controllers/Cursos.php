@@ -17,6 +17,10 @@ class Cursos extends Controllers {
     }
 
     public function cursos() {
+        if ($_SESSION['cargo-personal'] !== ROLADMINCOLE) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . "- Cursos del Colegio " . $_SESSION["userData"]["detalleRol"]["nombreCole"];
         $data['page_title'] = "Cursos";
         $data['page_name'] = "cursos";

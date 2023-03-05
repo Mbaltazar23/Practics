@@ -12,6 +12,10 @@ class Planes extends Controllers {
     }
 
     public function planes() {
+        if ($_SESSION['cargo-personal'] !== ROLADMINCOLE) {
+            header('Location: ' . base_url());
+            die();
+        }
         $data['page_tag'] = NOMBRE_WEB . " - Planes";
         $data['page_title'] = "Planes";
         $data['page_name'] = "planes";

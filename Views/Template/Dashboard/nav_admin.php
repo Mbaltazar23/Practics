@@ -1,9 +1,9 @@
 <!-- Sidebar menu-->
 <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 <aside class="app-sidebar">
-    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?= media(); ?>/images/perfil/<?=$_SESSION["userData"]["imgPerfil"]?>" alt="User Image">
+    <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="<?= media(); ?>/images/perfil/<?= $_SESSION["userData"]["imgPerfil"] ?>" alt="User Image">
         <div>
-            <p class="app-sidebar__user-name"><?= $_SESSION['userData']['nombre']; ?></p>
+            <p class="app-sidebar__user-name"><a href="<?= base_url(); ?>/dashboard/profile" style="text-decoration: none;"><?= $_SESSION['userData']['nombre']; ?></a></p>
         </div>
     </div>
     <ul class="app-menu">

@@ -231,12 +231,12 @@ class AlumnosModel extends Mysql {
 
     public function selectPlanAlum(int $idAlum) {
         $this->intIdAlumno = $idAlum;
-        $sql = "SELECT per.rut, al.id as idalum, per.id, per.nombre, per.apellido, per.correo, dp.detalleplan, dp.id as iddetalleplan, dp.plan_id ,pl.nombre as nombreP, "
-                . "DATE_FORMAT(per.created_at, '%d/%m/%Y') as fecha, DATE_FORMAT(per.created_at, '%H:%i:%s') AS hora, es.nombre as especialidad, "
-                . "cs.nombre as curso, al.fono, al.fono02,al.guia_id, al.profesor_id FROM alumno_plan dp INNER JOIN alumno al ON dp.alumno_id = al.id "
-                . "INNER JOIN persona per ON al.persona_id = per.id INNER JOIN plan pl ON dp.plan_id = pl.id "
-                . "INNER JOIN especialidad es ON al.especialidad_id = es.id INNER JOIN curso cs ON al.curso_id = cs.id "
-                . "WHERE al.persona_id = $this->intIdAlumno";
+        $sql = "SELECT per.rut, al.id as idalum, per.id, per.nombre, per.apellido, per.correo, dp.detalleplan, dp.id as iddetalleplan, dp.plan_id ,pl.nombre as nombreP,
+                DATE_FORMAT(per.created_at, '%d/%m/%Y') as fecha, DATE_FORMAT(per.created_at, '%H:%i:%s') AS hora, es.nombre as especialidad, 
+                cs.nombre as curso, al.fono, al.fono02,al.guia_id, al.profesor_id FROM alumno_plan dp INNER JOIN alumno al ON dp.alumno_id = al.id 
+                INNER JOIN persona per ON al.persona_id = per.id INNER JOIN plan pl ON dp.plan_id = pl.id 
+                INNER JOIN especialidad es ON al.especialidad_id = es.id INNER JOIN curso cs ON al.curso_id = cs.id 
+                WHERE al.persona_id = $this->intIdAlumno";
         $request = $this->select($sql);
 
         //cargamos los datos del guia

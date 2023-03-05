@@ -6,13 +6,11 @@ class TareasModel extends Mysql {
     private $idPlan;
     private $idAlum;
     private $intIdColegio;
-    private $idBitacora;
     private $nombreTarea;
-    private $bitacoraTarea;
     private $statusTarea;
     private $option;
 
-    // status = 1 : Activo, status = 2 : Visible, status = 3: Subida
+    // status = 1 : Activo, status = 2 : Visible, status = 3: Subida status = 4 Evaluada
 
     public function __construct() {
         parent::__construct();
@@ -87,90 +85,13 @@ class TareasModel extends Mysql {
 
     public function selectTarea(int $idTarea) {
         $this->idTarea = $idTarea;
-        $sql = "SELECT * FROM tarea WHERE id = $this->idTarea";
+        if ($_SESSION["cargo-personal"] != ROLALU) {
+            $sql = "SELECT * FROM tarea WHERE id = $this->idTarea";
+        } else {
+            $sql = "SELECT ta.id, ta.nombre,dt.status FROM tarea_plan dt 
+                    INNER JOIN tarea ta ON dt.tarea_id = ta.id WHERE dt.tarea_id = $this->idTarea";
+        }
         $request = $this->select($sql);
-        $sqlP = "SELECT * FROM tarea_plan WHERE tarea_id = $this->idTarea";
-        $requestP = $this->select($sqlP);
-        if ($requestP["status"] == 3) {
-            $sqlSub = "SELECT * FROM subida WHERE tarea_id = $this->idTarea";
-            $requestSub = $this->select($sqlSub);
-            $request["detalleSub"] = $requestSub;
-        }
-        return $request;
-    }
-
-    public function insertBitacoraTarea(int $idtarea, int $idpersona, string $bitacora) {
-        $this->idTarea = $idtarea;
-        $this->idAlum = $idpersona;
-        $this->bitacoraTarea = $bitacora;
-        $sql = "SELECT * FROM subida WHERE bitacora = '$this->bitacoraTarea' AND tareaid =$this->idTarea";
-        $request = $this->select_all($sql);
-        if (empty($request)) {
-            $query_insert = "INSERT INTO subida(bitacora, personaid, tareaid) VALUES (?,?,?)";
-            $arrData = array($this->bitacoraTarea,
-                $this->idAlum,
-                $this->idTarea);
-            $request_insert = $this->insert($query_insert, $arrData);
-
-            $sqlSelectPlan = "SELECT * FROM detalleplan WHERE personaid = $this->idAlum";
-            $requestP = $this->select($sqlSelectPlan);
-            $this->idPlan = $requestP["planid"];
-            $sqlU = "UPDATE detalletarea SET status = ? WHERE tareaid = $this->idTarea AND planid = $this->idPlan";
-            $arr = array(3); //el 3 representara que fue subida la tarea;
-            $this->update($sqlU, $arr);
-            $return = $request_insert;
-        } else {
-            $return = "exist";
-        }
-        return $return;
-    }
-
-    public function updateBitacoraTarea(int $idtarea, int $idpersona, string $bitacora, int $idBitacora) {
-        $this->idTarea = $idtarea;
-        $this->idAlum = $idpersona;
-        $this->bitacoraTarea = $bitacora;
-        $this->idBitacora = $idBitacora;
-        $sql = "SELECT * FROM subida WHERE tareaid = $this->idTarea AND idsubida != $this->idBitacora";
-        $request = $this->select_all($sql);
-        if (empty($request)) {
-            $query_update = "UPDATE subida SET bitacora = ?, personaid = ?,
-                        tareaid = ? WHERE idsubida = $this->idBitacora";
-            $arrData = array($this->bitacoraTarea,
-                $this->idAlum,
-                $this->idTarea);
-            $request = $this->update($query_update, $arrData);
-        } else {
-            $request = "exist";
-        }
-        return $request;
-    }
-
-    public function removeBitacoraTarea(int $idtarea, int $idpersona) {
-        $this->idTarea = $idtarea;
-        $this->idAlum = $idpersona;
-        $sqlSub = "SELECT * FROM subida WHERE tarea_id = $this->idTarea AND alumno_id = $this->idAlum";
-        $requesSub = $this->select($sqlSub);
-        $this->idBitacora = $requesSub["id"];
-
-        $sqlS = "SELECT * FROM evaluacion WHERE subida_id = $this->idBitacora";
-        $request = $this->select_all($sqlS);
-        if (empty($request)) {
-            $sqlD = "DELETE FROM subida WHERE id = $this->idBitacora";
-            $request = $this->delete($sqlD);
-            if ($request) {
-                $request = 'ok';
-            } else {
-                $request = 'error';
-            }
-            $sqlSelectPlan = "SELECT * FROM alumno_plan WHERE alumno_id = $this->idAlum";
-            $requestP = $this->select($sqlSelectPlan);
-            $this->idPlan = $requestP["plan_id"];
-            $sqlU = "UPDATE tarea_plan SET status = ? WHERE tarea_id = $this->idTarea AND plan_id = $this->idPlan";
-            $arr = array(2); //el 3 representara que fue subida la tarea;
-            $this->update($sqlU, $arr);
-        } else {
-            $request = 'exist';
-        }
         return $request;
     }
 

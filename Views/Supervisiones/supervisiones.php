@@ -1,18 +1,17 @@
 <?php
 headerDashboard($data);
-getModal('modalPlanes', $data);
+getModal("modalSupervisiones", $data);
 ?>
 <main class="app-content">
     <div class="app-title">
         <div>
             <h1>
-                <i class="fas fa-folder"></i> <?= NOMBRE_WEB . ' - ' . $data['page_title'] ?> &nbsp;&nbsp;
+                <i class="fas fa-eye"></i> <?= NOMBRE_WEB . ' - ' . $data['page_title'] ?> &nbsp;&nbsp;
                 <div class="btn-group" role="group">
                     <div class="btn-group" role="group">
                         <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-plus-circle"></i>&nbsp;&nbsp;Acciones</button>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item"  onclick="openModal();"><i class="fas fa-plus"></i> &nbsp;&nbsp;Nuevo</a>
-                            <a class="dropdown-item" onclick="generarReportPlanes()"><i class="fas fa-file-pdf"></i>&nbsp;&nbsp;Generar Reporte</a>
                         </div>
                     </div>
                 </div>
@@ -20,7 +19,7 @@ getModal('modalPlanes', $data);
         </div>
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-            <li class="breadcrumb-item"><a href="<?= base_url(); ?>/planes"><?= $data['page_title'] ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= base_url(); ?>/superviciones"><?= $data['page_title'] ?></a></li>
         </ul>
     </div>
     <div class="row">
@@ -28,11 +27,11 @@ getModal('modalPlanes', $data);
             <div class="tile">
                 <div class="tile-body">
                     <div class="table-responsive">
-                        <table class="table table-striped table-responsive-lg" id="tablePlanes" style="width:100%">
+                        <table class="table table-striped table-responsive-lg" id="tableSuperviciones" style="width: 100%">
                             <thead>
                                 <tr>
-                                    <th>Nombre</th>
-                                    <th>Descripcion</th>
+                                    <th>Nro</th>
+                                    <th>Supervicion</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
                                     <th>Status</th>
