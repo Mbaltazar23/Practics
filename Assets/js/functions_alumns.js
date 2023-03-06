@@ -100,9 +100,9 @@ function fntSelectsAlumns() {
             }
         };
     }
-    
+
     if (document.querySelector("#listEspecialidad")) {
-         let ajaxUrl = base_url + '/Especialidades/getSelectEspecialidades';
+        let ajaxUrl = base_url + '/Especialidades/getSelectEspecialidades';
         let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         request.open("GET", ajaxUrl, true);
         request.send();
@@ -113,7 +113,7 @@ function fntSelectsAlumns() {
         };
     }
     if (document.querySelector("#listCurso")) {
-         let ajaxUrl = base_url + '/Cursos/getSelectCursos';
+        let ajaxUrl = base_url + '/Cursos/getSelectCursos';
         let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
         request.open("GET", ajaxUrl, true);
         request.send();
@@ -272,30 +272,36 @@ function generarReportAlumns() {
             function (response) {
                 var fecha = new Date();
                 var Alumnos = JSON.parse(response);
-                //console.log(tecnicos);
-                let estado = "";
-                var pdf = new jsPDF();
-                pdf.text(20, 20, "Reportes de los Alumnos Registrados");
-                var data = [];
-                let telefons = "";
-                var columns = ["RUT", "NOMBRES", "TELEFONO", "CURSO", "ESTADO"];
-                for (let i = 0; i < Alumnos.length; i++) {
-                    if (Alumnos[i].status == 1) {
-                        estado = 'ACTIVO';
-                    } else if (Alumnos[i].status == 2) {
-                        estado = 'CON PLAN';
-                    } else {
-                        estado = 'INACTIVO';
+                if (Alumnos.length > 0) {
+
+
+                    //console.log(tecnicos);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    pdf.text(20, 20, "Reportes de los Alumnos Registrados");
+                    var data = [];
+                    let telefons = "";
+                    var columns = ["RUT", "NOMBRES", "TELEFONO", "CURSO", "ESTADO"];
+                    for (let i = 0; i < Alumnos.length; i++) {
+                        if (Alumnos[i].status == 1) {
+                            estado = 'ACTIVO';
+                        } else if (Alumnos[i].status == 2) {
+                            estado = 'CON PLAN';
+                        } else {
+                            estado = 'INACTIVO';
+                        }
+                        telefons = Alumnos[i].fono02 != "+569" ? Alumnos[i].fono + " - " + Alumnos[i].fono02 : Alumnos[i].fono;
+                        data[i] = [Alumnos[i].rut, Alumnos[i].nombre, telefons, Alumnos[i].curso, estado];
                     }
-                    telefons = Alumnos[i].fono02 != "+569" ? Alumnos[i].fono + " - " + Alumnos[i].fono02 : Alumnos[i].fono;
-                    data[i] = [Alumnos[i].rut, Alumnos[i].nombre, telefons, Alumnos[i].curso, estado];
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+                    pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteAlumnos.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con alumnos registrado !!", "error");
                 }
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-                pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteAlumnos.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
             }
     );
 }

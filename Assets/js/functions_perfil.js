@@ -168,6 +168,7 @@ function openModalPerfil() {
                 document.querySelector("#txtNombre").value = objData.data.nombre.toString().toLowerCase();
                 document.querySelector("#txtApellido").value = objData.data.apellido.toString().toLowerCase();
                 document.querySelector("#txtEmail").value = objData.data.correo.toString().toLowerCase();
+                document.querySelector("#txtDireccion").value = objData.data.direccion != "" ? objData.data.direccion.toString().toLowerCase() : "";
                 if (objData.data.avatar != "") {
                     document.querySelector('#foto_actual').value = objData.data.avatar;
                     document.querySelector("#panelFoto").innerHTML = "Actualizar Portada";

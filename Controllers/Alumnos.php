@@ -176,7 +176,7 @@ class Alumnos extends Controllers {
                 $listProfesors = intval($_POST["listProfesors"]);
                 $listGuia = intval($_POST["listGuia"]);
                 $IdColegio = intval($_SESSION["userData"]["detalleRol"]["colegio_id"]);
-                $txtPass = md5(ucfirst($txtNombreAlu));
+                $txtPass = md5("Practis.");
 
                 $request_alumn = "";
 

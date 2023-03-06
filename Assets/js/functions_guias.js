@@ -321,35 +321,39 @@ function generarReportGuias() {
     $.post(base_url + "/Guias/getGuiasReport", function (response) {
         var fecha = new Date();
         var guias = JSON.parse(response);
-        // console.log(tecnicos);
-        let estado = "";
-        var pdf = new jsPDF();
-        pdf.text(20, 20, "Reportes de los Guias Registrados");
-        var data = [];
-        var columns = ["RUT", "NOMBRES", "CORREO", "EMPRESA", "ESTADO"];
-        for (let i = 0; i < guias.length; i++) {
-            if (guias[i].status == 1) {
-                estado = 'ACTIVO';
-            } else {
-                estado = 'INACTIVO';
+        if (guias.length > 0) {
+            // console.log(tecnicos);
+            let estado = "";
+            var pdf = new jsPDF();
+            pdf.text(20, 20, "Reportes de los Guias Registrados");
+            var data = [];
+            var columns = ["RUT", "NOMBRES", "CORREO", "EMPRESA", "ESTADO"];
+            for (let i = 0; i < guias.length; i++) {
+                if (guias[i].status == 1) {
+                    estado = 'ACTIVO';
+                } else {
+                    estado = 'INACTIVO';
+                }
+                data[i] = [
+                    guias[i].nombre,
+                    guias[i].nombres + " " + guias[i].apellidos,
+                    guias[i].correo,
+                    guias[i].nombreE,
+                    estado
+                ];
             }
-            data[i] = [
-                guias[i].nombre,
-                guias[i].nombres + " " + guias[i].apellidos,
-                guias[i].correo,
-                guias[i].nombreE,
-                estado
-            ];
+            pdf.autoTable(columns, data, {
+                margin: {
+                    top: 40
+                }
+            });
+            pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (
+                    fecha.getMonth() + 1
+                    ) + "/" + fecha.getFullYear());
+            pdf.save('ReporteRoles.pdf');
+            swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+        } else {
+            swal("Error !!", "No se cuentan con maestros guias registrados !!", "error");
         }
-        pdf.autoTable(columns, data, {
-            margin: {
-                top: 40
-            }
-        });
-        pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (
-                fecha.getMonth() + 1
-                ) + "/" + fecha.getFullYear());
-        pdf.save('ReporteRoles.pdf');
-        swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
     });
 }

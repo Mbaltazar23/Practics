@@ -404,34 +404,38 @@ function generarReportTutores() {
     $.post(base_url + "/Tutores/getTutorsReport", function (response) {
         var fecha = new Date();
         var tutores = JSON.parse(response);
-        // console.log(tecnicos);
-        let estado = "";
-        var pdf = new jsPDF();
-        pdf.text(20, 20, "Reportes de los Tutores Registrados");
-        var data = [];
-        var columns = ["RUT", "NOMBRE", "CORREO", "ESTADO"];
-        for (let i = 0; i < tutores.length; i++) {
-            if (tutores[i].status == 1) {
-                estado = 'ACTIVO';
-            } else {
-                estado = 'INACTIVO';
+        if (tutores.length > 0) {
+            // console.log(tecnicos);
+            let estado = "";
+            var pdf = new jsPDF();
+            pdf.text(20, 20, "Reportes de los Tutores Registrados");
+            var data = [];
+            var columns = ["RUT", "NOMBRE", "CORREO", "ESTADO"];
+            for (let i = 0; i < tutores.length; i++) {
+                if (tutores[i].status == 1) {
+                    estado = 'ACTIVO';
+                } else {
+                    estado = 'INACTIVO';
+                }
+                data[i] = [
+                    tutores[i].rut,
+                    tutores[i].nombres + " " + tutores[i].apellidos,
+                    tutores[i].correo,
+                    estado
+                ];
             }
-            data[i] = [
-                tutores[i].rut,
-                tutores[i].nombres + " " + tutores[i].apellidos,
-                tutores[i].correo,
-                estado
-            ];
+            pdf.autoTable(columns, data, {
+                margin: {
+                    top: 40
+                }
+            });
+            pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (
+                    fecha.getMonth() + 1
+                    ) + "/" + fecha.getFullYear());
+            pdf.save('ReporteProfesores.pdf');
+            swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+        } else {
+            swal("Error !!", "No se cuentan con profesores registrados !!", "error");
         }
-        pdf.autoTable(columns, data, {
-            margin: {
-                top: 40
-            }
-        });
-        pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (
-                fecha.getMonth() + 1
-                ) + "/" + fecha.getFullYear());
-        pdf.save('ReporteProfesores.pdf');
-        swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
     });
 }

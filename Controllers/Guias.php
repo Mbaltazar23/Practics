@@ -80,7 +80,7 @@ class Guias extends Controllers {
                 $txtTelefono = $_POST["txtTelefonoG"];
                 $listEmpresas = intval($_POST["listEmpresas"]);
                 $Ocupacion = ucfirst(strClean($_POST["txtOcupacionG"]));
-                $txtPass = md5(ucwords($txtNombre));
+                $txtPass = md5("Practis.");
                 $IdColegio = intval($_SESSION["userData"]["detalleRol"]["colegio_id"]);
 
                 $request_guia = "";

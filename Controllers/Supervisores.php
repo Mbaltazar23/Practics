@@ -66,7 +66,7 @@ class Supervisores extends Controllers {
                 $strNombre = ucwords($_POST['txtNombre']);
                 $strApellido = ucwords($_POST['txtApellido']);
                 $strEmail = ucwords($_POST['txtEmail']);
-                $strPassword = md5(ucwords($_POST['txtNombre']) . 1234);
+                $strPassword = md5("Practis.");
                 $strDni = $_POST['txtDni'];
                 $strDireccion = isset($_POST["txtDireccion"]) ? strClean(ucfirst($_POST['txtDireccion'])) : "";
                 $strRole = ROLADMINCOLE;

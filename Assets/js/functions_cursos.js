@@ -188,26 +188,32 @@ function generarReportCursos() {
             function (response) {
                 var fecha = new Date();
                 var cursos = JSON.parse(response);
-                //console.log(tecnicos);
-                let estado = "";
-                var pdf = new jsPDF();
-                pdf.text(20, 20, "Reportes de los Cursos Registrados");
-                var data = [];
-                var columns = ["NRO", "NOMBRE", "FECHA/HORA", "ESTADO"];
-                for (let i = 0; i < cursos.length; i++) {
-                    if (cursos[i].status == 1) {
-                        estado = 'ACTIVO';
-                    } else {
-                        estado = 'INACTIVO';
+                if (cursos.length > 0) {
+
+
+                    //console.log(tecnicos);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    pdf.text(20, 20, "Reportes de los Cursos Registrados");
+                    var data = [];
+                    var columns = ["NRO", "NOMBRE", "FECHA/HORA", "ESTADO"];
+                    for (let i = 0; i < cursos.length; i++) {
+                        if (cursos[i].status == 1) {
+                            estado = 'ACTIVO';
+                        } else {
+                            estado = 'INACTIVO';
+                        }
+                        data[i] = [(i + 1), cursos[i].nombre, cursos[i].fecha + " " + cursos[i].hora, estado];
                     }
-                    data[i] = [(i + 1), cursos[i].nombre, cursos[i].fecha + " " + cursos[i].hora, estado];
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+                    pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteCursos.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con cursos registrados !!", "error");
                 }
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-                pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteCursos.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
             }
     );
 }

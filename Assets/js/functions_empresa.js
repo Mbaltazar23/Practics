@@ -225,26 +225,30 @@ function generarReportEmpresa() {
             function (response) {
                 var fecha = new Date();
                 var empresas = JSON.parse(response);
-                //console.log(empresas);
-                let estado = "";
-                var pdf = new jsPDF();
-                pdf.text(20, 20, "Reportes de las Empresas Registradas");
-                var data = [];
-                var columns = ["RUT", "NOMBRE", "RUBRO", "GUIAS", "ESTADO"];
-                for (let i = 0; i < empresas.length; i++) {
-                    if (empresas[i].status == 1) {
-                        estado = 'ACTIVO';
-                    } else {
-                        estado = 'INACTIVO';
+                if (empresas.length > 0) {
+                    //console.log(empresas);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    pdf.text(20, 20, "Reportes de las Empresas Registradas");
+                    var data = [];
+                    var columns = ["RUT", "NOMBRE", "RUBRO", "GUIAS", "ESTADO"];
+                    for (let i = 0; i < empresas.length; i++) {
+                        if (empresas[i].status == 1) {
+                            estado = 'ACTIVO';
+                        } else {
+                            estado = 'INACTIVO';
+                        }
+                        data[i] = [empresas[i].rut, empresas[i].nombre, empresas[i].rubro, empresas[i].listPersons, estado];
                     }
-                    data[i] = [empresas[i].rut, empresas[i].nombre, empresas[i].rubro, empresas[i].listPersons, estado];
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+                    pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteEmpress.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con empresas registradas !!", "error");
                 }
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-                pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteEmpress.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
             }
     );
 }

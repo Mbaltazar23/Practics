@@ -80,7 +80,7 @@ class Tutores extends Controllers {
                 $txtCorreo = ucwords(strClean($_POST["txtCorreoT"]));
                 $txtTelefono = $_POST["txtTelefonoT"];
                 $IdColegio = intval($_SESSION["userData"]["detalleRol"]["colegio_id"]);
-                $txtPass = md5($txtNombre);
+                $txtPass = md5("Practis.");
                 $request_tutor = "";
 
                 if ($idTutor == 0) {

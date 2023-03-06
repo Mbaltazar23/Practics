@@ -63,29 +63,33 @@ function generarReportSupervicions() {
             function (response) {
                 var fecha = new Date();
                 var supervisiones = JSON.parse(response);
-                //console.log(tecnicos);
-                let estado = "";
-                var pdf = new jsPDF();
-                pdf.text(20, 20, "Reportes de las Supervisiónes Registradas");
-                var data = [];
-                var columns = ["NRO", "SUPERVISIÓN", "PROFESOR", "FECHA/HORA", "ESTADO"];
-                for (let i = 0; i < supervisiones.length; i++) {
-                    if (supervisiones[i].status == 1) {
-                        estado = 'ACTIVO';
-                    } else {
-                        estado = 'INACTIVO';
+                if (supervisiones.length > 0) {
+                    //console.log(tecnicos);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    pdf.text(20, 20, "Reportes de las Supervisiónes Registradas");
+                    var data = [];
+                    var columns = ["NRO", "SUPERVISIÓN", "PROFESOR", "FECHA/HORA", "ESTADO"];
+                    for (let i = 0; i < supervisiones.length; i++) {
+                        if (supervisiones[i].status == 1) {
+                            estado = 'ACTIVO';
+                        } else {
+                            estado = 'INACTIVO';
+                        }
+                        data[i] = [(i + 1), supervisiones[i].texto,
+                            supervisiones[i].nombre + " " + supervisiones[i].apellido,
+                            supervisiones[i].fecha + " a las " + supervisiones[i].hora,
+                            estado];
                     }
-                    data[i] = [(i + 1), supervisiones[i].texto,
-                        supervisiones[i].nombre + " " + supervisiones[i].apellido,
-                        supervisiones[i].fecha + " a las " + supervisiones[i].hora,
-                        estado];
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+                    pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteSupervisiones.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con supervicicones hechas por los profesores !!", "error");
                 }
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-                pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteSupervisiones.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
             }
     );
 }

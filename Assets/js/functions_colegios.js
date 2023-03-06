@@ -210,38 +210,41 @@ function generarReportColegios() {
             function (response) {
                 var fecha = new Date();
                 let colegios = JSON.parse(response);
-                //console.log(notificaciones);
-                let estado = "";
-                var pdf = new jsPDF();
-                var columns = ["RUT", "NOMBRE", "TELEFONO", "DIRECCION", "ESTADO"];
-                var data = [];
+                if (colegios.length > 0) {
+                    //console.log(notificaciones);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    var columns = ["RUT", "NOMBRE", "TELEFONO", "DIRECCION", "ESTADO"];
+                    var data = [];
 
 
-                for (let i = 0; i < colegios.length; i++) {
-                    if (colegios[i].status == 1) {
-                        estado = "ACTIVO";
-                    } else {
-                        estado = "INACTIVO";
+                    for (let i = 0; i < colegios.length; i++) {
+                        if (colegios[i].status == 1) {
+                            estado = "ACTIVO";
+                        } else {
+                            estado = "INACTIVO";
+                        }
+                        data[i] = [colegios[i].rut,
+                            colegios[i].nombre,
+                            colegios[i].telefono,
+                            colegios[i].direccion,
+                            estado];
+
                     }
-                    data[i] = [colegios[i].rut,
-                        colegios[i].nombre,
-                        colegios[i].telefono,
-                        colegios[i].direccion,
-                        estado];
 
+
+                    pdf.text(20, 20, "Reportes de las colegios Registradas");
+
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+
+                    pdf.text(20, pdf.autoTable.previous.finalY + 20, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteColegios.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con colegios registrados !!", "error");
                 }
-
-
-                pdf.text(20, 20, "Reportes de las colegios Registradas");
-
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-
-                pdf.text(20, pdf.autoTable.previous.finalY + 20, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteColegios.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
-
             }
     );
 }

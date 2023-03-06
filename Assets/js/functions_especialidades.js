@@ -188,26 +188,30 @@ function generarReportEspecialidades() {
             function (response) {
                 var fecha = new Date();
                 var especialidades = JSON.parse(response);
-                //console.log(tecnicos);
-                let estado = "";
-                var pdf = new jsPDF();
-                pdf.text(20, 20, "Reportes de las Especialidades Registrados");
-                var data = [];
-                var columns = ["NRO", "NOMBRE", "FECHA/HORA", "ESTADO"];
-                for (let i = 0; i < especialidades.length; i++) {
-                    if (especialidades[i].status == 1) {
-                        estado = 'ACTIVO';
-                    } else {
-                        estado = 'INACTIVO';
+                if (especialidades.length > 0) {
+                    //console.log(tecnicos);
+                    let estado = "";
+                    var pdf = new jsPDF();
+                    pdf.text(20, 20, "Reportes de las Especialidades Registrados");
+                    var data = [];
+                    var columns = ["NRO", "NOMBRE", "FECHA/HORA", "ESTADO"];
+                    for (let i = 0; i < especialidades.length; i++) {
+                        if (especialidades[i].status == 1) {
+                            estado = 'ACTIVO';
+                        } else {
+                            estado = 'INACTIVO';
+                        }
+                        data[i] = [(i + 1), especialidades[i].nombre, especialidades[i].fecha + " " + especialidades[i].hora, estado];
                     }
-                    data[i] = [(i + 1), especialidades[i].nombre, especialidades[i].fecha + " " + especialidades[i].hora, estado];
+                    pdf.autoTable(columns, data,
+                            {margin: {top: 40}}
+                    );
+                    pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+                    pdf.save('ReporteEspecialidades.pdf');
+                    swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
+                } else {
+                    swal("Error !!", "No se cuentan con especialidades registradas !!", "error");
                 }
-                pdf.autoTable(columns, data,
-                        {margin: {top: 40}}
-                );
-                pdf.text(20, 190, "Fecha de Creacion : " + fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
-                pdf.save('ReporteEspecialidades.pdf');
-                swal('Exito', "Reporte Imprimido Exitosamente..", 'success');
             }
     );
 }

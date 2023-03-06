@@ -3,15 +3,12 @@
 class HomeModel extends Mysql {
 
     private $intIdUsuario;
-    private $intIdUsuario02;
     private $strUsuario;
     private $strRut;
     private $strNombre;
     private $strApellido;
     private $strPassword;
-    private $strSearch;
     private $strDireccion;
-    private $strMessage;
     private $strFoto;
 
     public function __construct() {
@@ -145,100 +142,101 @@ class HomeModel extends Mysql {
         }
     }
 
-    //funciones para el control de chat a diseñar
-
-    public function selectPersonsChat(int $idpersona, string $searchName) {
-        $this->intIdUsuario = $idpersona;
-        $this->strSearch = $searchName;
-        $request = "";
-        if ($this->strSearch != "") {
-            $sqlPersons = "SELECT * FROM persona WHERE NOT idpersona = $this->intIdUsuario "
-                    . "AND (nombres LIKE '%$this->strSearch%' OR apellidos LIKE '%$this->strSearch%')";
-            $request = $this->select_all($sqlPersons);
-        }
-        if ($request != "") {
-            for ($i = 0; $i < count($request); $i++) {
-                $idperson = $request[$i]["idpersona"];
-                $sqlMsj = "SELECT * FROM mensaje WHERE (personaid_en = $idperson OR personaid_rec = $idperson) "
-                        . "AND (personaid_rec = $idperson OR personaid_en = $idperson) ORDER BY idenvio DESC LIMIT 1";
-                $messages = $this->select_all($sqlMsj);
-                $request[$i]["messages"] = "";
-                $request[$i]["personaRecep"] = "";
-                if (count($messages) > 0) {
-                    for ($j = 0; $j < count($messages); $j++) {
-                        if ($request[$i]["idpersona"] == $messages[$j]["personaid_rec"]) {
-                            $request[$i]["messages"] .= $messages[$j]["texto"];
-                            $request[$i]["personaRecep"] .= $messages[$j]["personaid_en"];
-                        }
-                    }
-                }
-            }
-        }
-
-        return $request;
-    }
-
-    public function selectPersonsActive(int $idpersona) {
-        $this->intIdUsuario = $idpersona;
-        $sqlPersons = "SELECT * FROM persona WHERE NOT idpersona = $this->intIdUsuario ORDER BY idpersona DESC";
-        $request = $this->select_all($sqlPersons);
-        if (count($request) > 0) {
-            for ($i = 0; $i < count($request); $i++) {
-                $idperson = $request[$i]["idpersona"];
-                $sqlMsj = "SELECT * FROM mensaje WHERE (personaid_en = $idperson OR personaid_rec = $idperson) "
-                        . "AND (personaid_rec = $idperson OR personaid_en = $idperson) ORDER BY idenvio DESC LIMIT 1";
-                $messages = $this->select_all($sqlMsj);
-                $request[$i]["messages"] = "";
-                $request[$i]["personaRecep"] = "";
-                if (count($messages) > 0) {
-                    for ($j = 0; $j < count($messages); $j++) {
-                        if ($request[$i]["idpersona"] == $messages[$j]["personaid_rec"]) {
-                            $request[$i]["messages"] .= $messages[$j]["texto"];
-                            $request[$i]["personaRecep"] .= $messages[$j]["personaid_en"];
-                        }
-                    }
-                }
-            }
-        } else {
-            $request = "";
-        }
-
-        return $request;
-    }
-
     public function desconectarSession($idpersona) {
         $this->intIdUsuario = $idpersona;
-        $sqlU = "UPDATE persona SET sesion = ? WHERE idpersona = $this->intIdUsuario";
+        $sqlU = "UPDATE persona SET sesion = ? WHERE id = $this->intIdUsuario";
         $arrData = array("Inactivo");
         $request = $this->update($sqlU, $arrData);
         return $request;
     }
+    
+    
+//    //funciones para el control de chat a diseñar
+//
+//    public function selectPersonsChat(int $idpersona, string $searchName) {
+//        $this->intIdUsuario = $idpersona;
+//        $this->strSearch = $searchName;
+//        $request = "";
+//        if ($this->strSearch != "") {
+//            $sqlPersons = "SELECT * FROM persona WHERE NOT idpersona = $this->intIdUsuario "
+//                    . "AND (nombres LIKE '%$this->strSearch%' OR apellidos LIKE '%$this->strSearch%')";
+//            $request = $this->select_all($sqlPersons);
+//        }
+//        if ($request != "") {
+//            for ($i = 0; $i < count($request); $i++) {
+//                $idperson = $request[$i]["idpersona"];
+//                $sqlMsj = "SELECT * FROM mensaje WHERE (personaid_en = $idperson OR personaid_rec = $idperson) "
+//                        . "AND (personaid_rec = $idperson OR personaid_en = $idperson) ORDER BY idenvio DESC LIMIT 1";
+//                $messages = $this->select_all($sqlMsj);
+//                $request[$i]["messages"] = "";
+//                $request[$i]["personaRecep"] = "";
+//                if (count($messages) > 0) {
+//                    for ($j = 0; $j < count($messages); $j++) {
+//                        if ($request[$i]["idpersona"] == $messages[$j]["personaid_rec"]) {
+//                            $request[$i]["messages"] .= $messages[$j]["texto"];
+//                            $request[$i]["personaRecep"] .= $messages[$j]["personaid_en"];
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        return $request;
+//    }
 
-    public function insertChat(int $idpersonaEnv, int $idpersonaRecep, string $mensaje) {
-        $this->intIdUsuario = $idpersonaEnv;
-        $this->intIdUsuario02 = $idpersonaRecep;
-        $this->strMessage = $mensaje;
-
-        $sql = "INSERT INTO mensaje(personaid_en, personaid_rec, texto) VALUES (?,?,?)";
-
-        $arrData = array($this->intIdUsuario,
-            $this->intIdUsuario02,
-            $this->strMessage);
-
-        $request = $this->insert($sql, $arrData);
-        return $request;
-    }
-
-    public function selectMessages(int $idpersonaEnv, int $idpersonaRecep) {
-        $this->intIdUsuario = $idpersonaEnv;
-        $this->intIdUsuario02 = $idpersonaRecep;
-        $sql = "SELECT * FROM mensaje msg LEFT JOIN persona per ON per.idpersona = msg.personaid_rec"
-                . " WHERE (msg.personaid_rec = $this->intIdUsuario02 AND msg.personaid_en = $this->intIdUsuario) "
-                . "OR (msg.personaid_rec = $this->intIdUsuario AND msg.personaid_en = $this->intIdUsuario02) "
-                . "ORDER BY msg.idenvio";
-        $request = $this->select_all($sql);
-        return $request;
-    }
+//    public function selectPersonsActive(int $idpersona) {
+//        $this->intIdUsuario = $idpersona;
+//        $sqlPersons = "SELECT * FROM persona WHERE NOT idpersona = $this->intIdUsuario ORDER BY idpersona DESC";
+//        $request = $this->select_all($sqlPersons);
+//        if (count($request) > 0) {
+//            for ($i = 0; $i < count($request); $i++) {
+//                $idperson = $request[$i]["idpersona"];
+//                $sqlMsj = "SELECT * FROM mensaje WHERE (personaid_en = $idperson OR personaid_rec = $idperson) "
+//                        . "AND (personaid_rec = $idperson OR personaid_en = $idperson) ORDER BY idenvio DESC LIMIT 1";
+//                $messages = $this->select_all($sqlMsj);
+//                $request[$i]["messages"] = "";
+//                $request[$i]["personaRecep"] = "";
+//                if (count($messages) > 0) {
+//                    for ($j = 0; $j < count($messages); $j++) {
+//                        if ($request[$i]["idpersona"] == $messages[$j]["personaid_rec"]) {
+//                            $request[$i]["messages"] .= $messages[$j]["texto"];
+//                            $request[$i]["personaRecep"] .= $messages[$j]["personaid_en"];
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            $request = "";
+//        }
+//
+//        return $request;
+//    }
+//
+//    public function insertChat(int $idpersonaEnv, int $idpersonaRecep, string $mensaje) {
+//        $this->intIdUsuario = $idpersonaEnv;
+//        $this->intIdUsuario02 = $idpersonaRecep;
+//        $this->strMessage = $mensaje;
+//
+//        $sql = "INSERT INTO mensaje(personaid_en, personaid_rec, texto) VALUES (?,?,?)";
+//
+//        $arrData = array($this->intIdUsuario,
+//            $this->intIdUsuario02,
+//            $this->strMessage);
+//
+//        $request = $this->insert($sql, $arrData);
+//        return $request;
+//    }
+//
+//    public function selectMessages(int $idpersonaEnv, int $idpersonaRecep) {
+//        $this->intIdUsuario = $idpersonaEnv;
+//        $this->intIdUsuario02 = $idpersonaRecep;
+//        $sql = "SELECT * FROM mensaje msg LEFT JOIN persona per ON per.idpersona = msg.personaid_rec"
+//                . " WHERE (msg.personaid_rec = $this->intIdUsuario02 AND msg.personaid_en = $this->intIdUsuario) "
+//                . "OR (msg.personaid_rec = $this->intIdUsuario AND msg.personaid_en = $this->intIdUsuario02) "
+//                . "ORDER BY msg.idenvio";
+//        $request = $this->select_all($sql);
+//        return $request;
+//    }
 
 }
 
