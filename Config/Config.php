@@ -1,6 +1,6 @@
 <?php
 
-const BASE_URL = "http://localhost/Practics";
+const BASE_URL = "https://gespron.cl/Practics";
 
 //Zona horaria
 date_default_timezone_set('America/Santiago');
